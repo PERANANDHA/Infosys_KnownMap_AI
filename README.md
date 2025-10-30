@@ -26,14 +26,6 @@ AI-KnowMap is an open-source, AI-powered platform that transforms unstructured t
 ```
 AI-KnowMap/
 ├── app.py                  # Main Flask + Gradio app
-├── requirements.txt        # Python dependencies
-├── Dockerfile              # Container configuration
-├── datasets/               # Uploaded datasets
-├── models/                 # NLP models (optional)
-├── templates/              # Flask HTML templates (admin)
-├── static/                 # CSS/JS assets (admin)
-├── feedback.csv            # User feedback (if CSV-based)
-├── knowmap.db              # SQLite database
 └── README.md               # Project documentation
 ```
 
