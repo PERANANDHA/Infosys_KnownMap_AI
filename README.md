@@ -78,9 +78,6 @@ docker build -t knowmap-app .
 ```bash
 docker run -p 8501:8501 knowmap-app
 ```
-
-Access the app at: [http://localhost:8501](http://localhost:8501)
-
 ---
 
 ## 🧠 NLP Pipeline
