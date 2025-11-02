@@ -22,7 +22,21 @@ from flask import Flask
 import networkx as nx
 from pyvis.network import Network
 
-
+custom_css = """
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #9e9e9e;
+    font-size: 14px;
+    padding: 12px 0;
+    border-top: 1px solid #2a2a2a;
+    background-color: #111;
+    z-index: 999;
+}
+"""
 # ----------------- Configuration -----------------
 logging.basicConfig(level=logging.INFO)
 app_flask = Flask(__name__)
@@ -653,8 +667,14 @@ def semantic_search_uploaded(token, query, top_k=6):
 
 
 # ----------------- Gradio UI -----------------
-with gr.Blocks() as demo:
-    gr.Markdown("## AI-KnowMap")
+with gr.Blocks(css=custom_css) as demo:
+    gr.Markdown("## AI-KnowMap — Cross-Domain Knowledge Mapping AI System")
+    gr.HTML(
+        '<div class="footer">'
+        'Use via API 🚀 · Built with Gradio 🧠 · Settings ⚙️<br>'
+        'Developed by <b>Peranandha K L</b>'
+        '</div>'
+    )
 
     # global state to optionally auto-fill token across tabs
     token_state = gr.State(value="")
@@ -893,5 +913,42 @@ with gr.Blocks() as demo:
            !python app.py
            ```
         """)
-# LAUNCH GRADIO
+          # ----------------- DOWNLOAD DOCKERFILE TAB -----------------
+    with gr.Tab("🐳 Download Dockerfile"):
+        gr.Markdown("### 📦 Download Ready-to-Run Dockerfile for AI-KnowMap")
+
+        def get_dockerfile():
+            docker_content = """\
+# -------------------------------
+# 🧠 AI-KnowMap Dockerfile
+# -------------------------------
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY . /app
+
+RUN apt-get update && apt-get install -y \\
+    build-essential \\
+    git \\
+    libgl1-mesa-glx \\
+    libglib2.0-0 \\
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m spacy download en_core_web_sm
+
+EXPOSE 7860
+CMD ["python", "app.py"]
+"""
+            temp_path = os.path.join(tempfile.gettempdir(), "Dockerfile")
+            with open(temp_path, "w") as f:
+                f.write(docker_content)
+            return temp_path
+
+        download_btn = gr.Button("📦 Download Dockerfile")
+        docker_file_output = gr.File(label="Your Dockerfile")
+        download_btn.click(fn=get_dockerfile, outputs=docker_file_output)
+
+
+# ----------------- END OF UI -----------------
 demo.launch()
